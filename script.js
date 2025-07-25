@@ -105,14 +105,10 @@ function checkWin() {
   });
 
   if (correct) {
-    message.innerHTML = `
-      🎉 تبریک! پازل با موفقیت حل شد!<br>
-      <button id="nextStageBtn">➡️ مرحله بعد</button>
-    `;
-    document.getElementById("nextStageBtn").addEventListener("click", () => {
-      window.location.href = "next.html";
-    });
+    message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
+    document.getElementById("nextStageBtn").style.display = "inline-block";
+  } else {
+    document.getElementById("nextStageBtn").style.display = "none";
   }
 }
-
 window.onload = initPuzzle;
