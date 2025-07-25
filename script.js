@@ -93,7 +93,9 @@ function swapTiles(tile1, tile2) {
 function checkWin() {
   const tiles = Array.from(document.querySelectorAll(".tile"));
   const correct = tiles.every((tile, index) => {
-    return tile.dataset.index == index;
+    const img = tile.querySelector("img");
+    const expected = `tile-${String(index).padStart(2, '0')}.jpg`;
+    return img.src.includes(expected);
   });
 
   if (correct) {
