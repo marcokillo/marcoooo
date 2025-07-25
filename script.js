@@ -1,11 +1,14 @@
 const puzzle = document.getElementById('puzzle');
 const message = document.getElementById('message');
+const nextStageBtn = document.getElementById('nextStageBtn');
+let puzzleSolved = false;
 let dragSrcEl = null;
 let selectedTile = null;
 
 function initPuzzle() {
   puzzle.innerHTML = "";
   message.innerHTML = "";
+  puzzleSolved = false;
 
   const indices = [...Array(12).keys()];
   shuffle(indices);
@@ -14,11 +17,11 @@ function initPuzzle() {
     const tile = document.createElement("div");
     tile.className = "tile";
     tile.draggable = true;
-    tile.dataset.index = imgIndex;
 
     const img = document.createElement("img");
     img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
     img.alt = `Tile ${imgIndex}`;
+    img.dataset.index = imgIndex;
 
     tile.appendChild(img);
     puzzle.appendChild(tile);
@@ -87,41 +90,35 @@ function swapTiles(tile1, tile2) {
   const img1 = tile1.querySelector("img");
   const img2 = tile2.querySelector("img");
 
-  // Swap src
-  const tempSrc = img1.src;
-  img1.src = img2.src;
-  img2.src = tempSrc;
+  const src1 = img1.src;
+  const index1 = img1.dataset.index;
 
-  // Swap dataset index
-  const tempIndex = tile1.dataset.index;
-  tile1.dataset.index = tile2.dataset.index;
-  tile2.dataset.index = tempIndex;
+  img1.src = img2.src;
+  img1.dataset.index = img2.dataset.index;
+
+  img2.src = src1;
+  img2.dataset.index = index1;
 }
 
 function checkWin() {
   const tiles = Array.from(document.querySelectorAll(".tile"));
   const correct = tiles.every((tile, index) => {
-    const currentIndex = Number(tile.dataset.index);
-    return currentIndex === index;
+    const img = tile.querySelector("img");
+    return Number(img.dataset.index) === index;
   });
 
   if (correct) {
-    message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!<br>⏳ در حال رفتن به مرحله بعد...";
-    setTimeout(showNextStage, 2000);
+    message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
+    puzzleSolved = true;
   }
 }
 
-function showNextStage() {
-  puzzle.innerHTML = "";
-  message.innerHTML = `
-    <div class="stage-text">
-      <p>این‌بار، اجازه دادم سایه‌اش وارد بوم شود...<br>
-      نه از روی ترس، بلکه از خستگی.<br>
-      شاید اگر ردپایش را روی کاغذ ببیند، بفهمد که من مدت‌هاست او را دیده‌ام.<br>
-      و شاید، فقط شاید، از تعقیبم دست بکشد.</p>
-      <button onclick="initPuzzle()">🔁 بازگشت به پازل</button>
-    </div>
-  `;
+function goToNextStage() {
+  if (puzzleSolved) {
+    window.location.href = "stage2.html";
+  } else {
+    message.innerHTML = "❌ لطفاً ابتدا پازل را کامل کنید!";
+  }
 }
 
 window.onload = initPuzzle;
