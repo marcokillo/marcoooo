@@ -1,126 +1,99 @@
-const puzzle = document.getElementById('puzzle');
-const message = document.getElementById('message');
-let dragSrcEl = null;
-let selectedTile = null;
-
-function initPuzzle() {
-  puzzle.innerHTML = "";
-  message.innerHTML = "";
-
-  const indices = [...Array(12).keys()];
-  shuffle(indices);
-
-  indices.forEach((imgIndex) => {
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    tile.draggable = true;
-
-    const img = document.createElement("img");
-    img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
-    img.alt = `Tile ${imgIndex}`;
-    img.dataset.index = imgIndex;
-
-    tile.appendChild(img);
-    puzzle.appendChild(tile);
-  });
-
-  addEvents();
+/* پایه */
+body {
+  margin: 0;
+  padding: 0;
+  background: #111;
+  font-family: Tahoma, sans-serif;
+  color: #fff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  direction: rtl;
 }
 
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+/* محتوای مرکزی */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90%;
 }
 
-function addEvents() {
-  const tiles = document.querySelectorAll(".tile");
-
-  tiles.forEach(tile => {
-    tile.addEventListener("dragstart", function () {
-      dragSrcEl = this;
-      this.classList.add("dragging");
-    });
-
-    tile.addEventListener("dragover", function (e) {
-      e.preventDefault();
-      this.classList.add("over");
-    });
-
-    tile.addEventListener("dragleave", function () {
-      this.classList.remove("over");
-    });
-
-    tile.addEventListener("drop", function (e) {
-      e.preventDefault();
-      this.classList.remove("over");
-
-      if (dragSrcEl !== this) {
-        swapTiles(dragSrcEl, this);
-        checkWin();
-      }
-
-      dragSrcEl.classList.remove("dragging");
-    });
-
-    tile.addEventListener("dragend", function () {
-      this.classList.remove("dragging");
-    });
-
-    tile.addEventListener("touchstart", function (e) {
-      e.preventDefault();
-      if (!selectedTile) {
-        selectedTile = this;
-        this.classList.add("selected");
-      } else {
-        swapTiles(selectedTile, this);
-        selectedTile.classList.remove("selected");
-        selectedTile = null;
-        checkWin();
-      }
-    });
-  });
+/* پازل */
+.puzzle {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 400px;
+  height: 600px;
+  gap: 2px;
+  margin: 20px 0;
 }
 
-function swapTiles(tile1, tile2) {
-  const img1 = tile1.querySelector("img");
-  const img2 = tile2.querySelector("img");
-
-  const src1 = img1.src;
-  const index1 = img1.dataset.index;
-
-  img1.src = img2.src;
-  img1.dataset.index = img2.dataset.index;
-
-  img2.src = src1;
-  img2.dataset.index = index1;
+/* تکه‌های پازل */
+.tile {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  border: 1px solid #444;
+}
+.tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-function checkWin() {
-  const tiles = Array.from(document.querySelectorAll(".tile"));
-  const correct = tiles.every((tile, index) => {
-    const img = tile.querySelector("img");
-    return Number(img.dataset.index) === index;
-  });
-
-  if (correct) {
-    message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!<br>⏳ در حال رفتن به مرحله بعد...";
-    setTimeout(showNextStage, 2000);
-  }
+/* حالت درگ */
+.dragging, .selected {
+  opacity: 0.6;
+  outline: 2px dashed yellow;
 }
 
-function showNextStage() {
-  puzzle.innerHTML = "";
-  message.innerHTML = `
-    <div class="stage-text">
-      <p>این‌بار، اجازه دادم سایه‌اش وارد بوم شود...<br>
-      نه از روی ترس، بلکه از خستگی.<br>
-      شاید اگر ردپایش را روی کاغذ ببیند، بفهمد که من مدت‌هاست او را دیده‌ام.<br>
-      و شاید، فقط شاید، از تعقیبم دست بکشد.</p>
-      <button onclick="initPuzzle()">🔁 بازگشت به پازل</button>
-    </div>
-  `;
+/* دکمه‌ها */
+button {
+  padding: 10px 20px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 5px;
+}
+button:hover {
+  background: #ddd;
 }
 
-window.onload = initPuzzle;
+/* دکمه مرحله بعد */
+#nextStageBtn {
+  background-color: #4caf50;
+  color: white;
+}
+#nextStageBtn:disabled {
+  background: #777;
+  cursor: not-allowed;
+}
+#nextStageBtn:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+/* پیغام موفقیت */
+#message {
+  margin-top: 15px;
+  font-size: 18px;
+  color: #0f0;
+}
+
+/* متن مرحله بعد */
+.stage-text {
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  line-height: 2;
+  font-size: 18px;
+  max-width: 90%;
+  margin: 0 auto;
+}
