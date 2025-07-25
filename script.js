@@ -84,13 +84,18 @@ function addEvents() {
 }
 
 function swapTiles(tile1, tile2) {
-  const clone1 = tile1.cloneNode(true);
-  const clone2 = tile2.cloneNode(true);
+  const img1 = tile1.querySelector("img");
+  const img2 = tile2.querySelector("img");
 
-  tile1.replaceWith(clone2);
-  tile2.replaceWith(clone1);
+  // Swap src
+  const tempSrc = img1.src;
+  img1.src = img2.src;
+  img2.src = tempSrc;
 
-  addEvents(); // مجدد باید ایونت‌ها رو اعمال کنیم
+  // Swap dataset index
+  const tempIndex = tile1.dataset.index;
+  tile1.dataset.index = tile2.dataset.index;
+  tile2.dataset.index = tempIndex;
 }
 
 function checkWin() {
