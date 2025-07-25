@@ -1,14 +1,11 @@
 const puzzle = document.getElementById('puzzle');
 const message = document.getElementById('message');
-const nextStageBtn = document.getElementById('nextStageBtn');
-let puzzleSolved = false;
 let dragSrcEl = null;
 let selectedTile = null;
 
 function initPuzzle() {
   puzzle.innerHTML = "";
   message.innerHTML = "";
-  puzzleSolved = false;
 
   const indices = [...Array(12).keys()];
   shuffle(indices);
@@ -108,16 +105,13 @@ function checkWin() {
   });
 
   if (correct) {
-    message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
-    puzzleSolved = true;
-  }
-}
-
-function goToNextStage() {
-  if (puzzleSolved) {
-    window.location.href = "stage2.html";
-  } else {
-    message.innerHTML = "❌ لطفاً ابتدا پازل را کامل کنید!";
+    message.innerHTML = `
+      🎉 تبریک! پازل با موفقیت حل شد!<br>
+      <button id="nextStageBtn">➡️ مرحله بعد</button>
+    `;
+    document.getElementById("nextStageBtn").addEventListener("click", () => {
+      window.location.href = "next.html";
+    });
   }
 }
 
