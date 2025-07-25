@@ -17,7 +17,7 @@ function initPuzzle() {
     tile.dataset.index = imgIndex;
 
     const img = document.createElement("img");
-    img.src = `tiles/tile-${imgIndex}.jpg`;
+   img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
     img.alt = `Tile ${imgIndex}`;
 
     tile.appendChild(img);
