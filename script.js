@@ -17,7 +17,7 @@ function initPuzzle() {
     tile.dataset.index = imgIndex;
 
     const img = document.createElement("img");
-   img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
+    img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
     img.alt = `Tile ${imgIndex}`;
 
     tile.appendChild(img);
@@ -91,10 +91,12 @@ function swapTiles(tile1, tile2) {
 }
 
 function checkWin() {
-  const tiles = document.querySelectorAll(".tile");
-  const isSolved = [...tiles].every((tile, i) => tile.dataset.index == i);
+  const tiles = Array.from(document.querySelectorAll(".tile"));
+  const correct = tiles.every((tile, index) => {
+    return tile.dataset.index == index;
+  });
 
-  if (isSolved) {
+  if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!<br>⏳ در حال رفتن به مرحله بعد...";
     setTimeout(showNextStage, 2000);
   }
