@@ -17,15 +17,15 @@ function initPuzzle() {
     tile.dataset.index = imgIndex;
 
     const img = document.createElement("img");
-   img.src = tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg;
-img.alt = Tile ${imgIndex};
+    img.src = tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg;
+    img.alt = Tile ${imgIndex};
+
     tile.appendChild(img);
     puzzle.appendChild(tile);
   });
 
   addEvents();
 }
-
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
