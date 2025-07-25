@@ -5,7 +5,7 @@ let selectedTile = null;
 
 function initPuzzle() {
   puzzle.innerHTML = "";
-  message.textContent = "";
+  message.innerHTML = "";
 
   const indices = [...Array(12).keys()];
   shuffle(indices);
@@ -84,24 +84,20 @@ function addEvents() {
 }
 
 function swapTiles(tile1, tile2) {
-  const img1 = tile1.querySelector("img");
-  const img2 = tile2.querySelector("img");
+  const clone1 = tile1.cloneNode(true);
+  const clone2 = tile2.cloneNode(true);
 
-  const tempSrc = img1.src;
-  const tempIndex = tile1.dataset.index;
+  tile1.replaceWith(clone2);
+  tile2.replaceWith(clone1);
 
-  img1.src = img2.src;
-  tile1.dataset.index = tile2.dataset.index;
-
-  img2.src = tempSrc;
-  tile2.dataset.index = tempIndex;
+  addEvents(); // مجدد باید ایونت‌ها رو اعمال کنیم
 }
 
 function checkWin() {
   const tiles = Array.from(document.querySelectorAll(".tile"));
   const correct = tiles.every((tile, index) => {
-    const currentIndex = tile.dataset.index;
-    return Number(currentIndex) === index;
+    const currentIndex = Number(tile.dataset.index);
+    return currentIndex === index;
   });
 
   if (correct) {
