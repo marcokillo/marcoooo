@@ -17,8 +17,8 @@ function initPuzzle() {
     tile.dataset.index = imgIndex;
 
     const img = document.createElement("img");
-    img.src = tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg;
-    img.alt = Tile ${imgIndex};
+    img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
+    img.alt = `Tile ${imgIndex}`;
 
     tile.appendChild(img);
     puzzle.appendChild(tile);
@@ -26,6 +26,7 @@ function initPuzzle() {
 
   addEvents();
 }
+
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,15 +45,22 @@ function addEvents() {
 
     tile.addEventListener("dragover", function (e) {
       e.preventDefault();
+      this.classList.add("over");
+    });
+
+    tile.addEventListener("dragleave", function () {
+      this.classList.remove("over");
     });
 
     tile.addEventListener("drop", function (e) {
       e.preventDefault();
+      this.classList.remove("over");
+
       if (dragSrcEl !== this) {
         swapTiles(dragSrcEl, this);
         checkWin();
       }
-      this.classList.remove("over");
+
       dragSrcEl.classList.remove("dragging");
     });
 
