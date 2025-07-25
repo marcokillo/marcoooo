@@ -1,11 +1,14 @@
 const puzzle = document.getElementById('puzzle');
 const message = document.getElementById('message');
+const nextStageBtn = document.getElementById("nextStageBtn");
+
 let dragSrcEl = null;
 let selectedTile = null;
 
 function initPuzzle() {
   puzzle.innerHTML = "";
   message.innerHTML = "";
+  nextStageBtn.style.display = "none";
 
   const indices = [...Array(12).keys()];
   shuffle(indices);
@@ -106,9 +109,15 @@ function checkWin() {
 
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
-    document.getElementById("nextStageBtn").style.display = "inline-block";
+    nextStageBtn.style.display = "inline-block";
   } else {
-    document.getElementById("nextStageBtn").style.display = "none";
+    nextStageBtn.style.display = "none";
   }
 }
+
+// انتقال به مرحله بعد (فایل next.html)
+nextStageBtn.addEventListener("click", () => {
+  window.location.href = "next.html";
+});
+
 window.onload = initPuzzle;
