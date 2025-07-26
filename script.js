@@ -101,10 +101,14 @@ function swapTiles(tile1, tile2) {
 }
 
 function checkWin() {
-  const images = Array.from(document.querySelectorAll(".tile img"));
-  const correct = images.every((img, index) => Number(img.dataset.index) === index);
+  const tiles = document.querySelectorAll(".tile");
+  
+  const correct = Array.from(tiles).every((tile, index) => {
+    const img = tile.querySelector("img");
+    return Number(img.dataset.index) === index;
+  });
 
-  console.log("Puzzle Solved:", correct); 
+  console.log("Puzzle Solved:", correct); // فقط برای تست - می‌تونی حذفش کنی
 
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
