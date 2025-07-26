@@ -2,22 +2,167 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>پازل تصویری</title>
-  <link rel="stylesheet" href="style.css">
+  <title>پازل جنایی</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      direction: rtl;
+    }
+
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(4, 150px);
+      grid-template-rows: repeat(3, 150px);
+      gap: 2px;
+      justify-content: center;
+      margin: 30px auto;
+    }
+
+    .tile {
+      width: 150px;
+      height: 150px;
+      border: 1px solid #333;
+      overflow: hidden;
+    }
+
+    .tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    button {
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    #nextText {
+      margin-top: 30px;
+      font-size: 18px;
+      color: #ccc;
+      line-height: 2;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <div class="wrapper">
-    <h1>پازل تصویری</h1>
-    <div class="puzzle" id="puzzle"></div>
-    
-    <div class="controls">
-      <button onclick="initPuzzle()">شروع جدید</button>
-      <button id="nextStageBtn" style="display:none;">مرحله بعد</button>
-    </div>
+  <h1>پازل جنایی</h1>
 
-    <div id="message"></div>
+  <div id="controls">
+    <button onclick="shuffleTiles()">شروع دوباره</button>
+    <button id="nextStage" disabled onclick="showNextStage()">مرحله بعد</button>
   </div>
 
-  <script src="script.js"></script>
+  <div id="puzzle"></div>
+
+  <div id="nextText" class="hidden">
+    <p>این‌بار، اجازه دادم سایه‌اش وارد بوم شود...<br>
+      نه از روی ترس، بلکه از خستگی.<br>
+      شاید اگر ردپایش را روی کاغذ ببیند، بفهمد که من مدت‌هاست او را دیده‌ام.<br>
+      و شاید، فقط شاید، از تعقیبم دست بکشد.
+    </p>
+    <button onclick="location.reload()">🔁 بازگشت به پازل</button>
+  </div>
+
+  <script>
+    const puzzle = document.getElementById("puzzle");
+    const nextStageBtn = document.getElementById("nextStage");
+    const nextText = document.getElementById("nextText");
+
+    let tileCount = 12;
+
+    function createPuzzle() {
+      puzzle.innerHTML = "";
+
+      for (let i = 0; i < tileCount; i++) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+
+        const img = document.createElement("img");
+        img.src = "tiles/tile-" + String(i).padStart(2, '0') + ".jpg";
+        img.dataset.index = i;
+
+        tile.appendChild(img);
+        puzzle.appendChild(tile);
+      }
+
+      addDragEvents();
+    }
+
+    function shuffleTiles() {
+      const tiles = Array.from(puzzle.children);
+      for (let i = tiles.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        puzzle.insertBefore(tiles[j], tiles[i]);
+      }
+      nextStageBtn.disabled = true;
+      nextText.classList.add("hidden");
+      addDragEvents();
+    }
+
+    function addDragEvents() {
+      const imgs = document.querySelectorAll("#puzzle img");
+      imgs.forEach(img => {
+        img.draggable = true;
+
+        img.addEventListener("dragstart", (e) => {
+          e.dataTransfer.setData("text/plain", e.target.dataset.index);
+          e.dataTransfer.setData("tile", e.target.parentElement.innerHTML);
+        });
+
+        img.parentElement.addEventListener("dragover", (e) => e.preventDefault());
+
+        img.parentElement.addEventListener("drop", (e) => {
+          e.preventDefault();
+          const fromIndex = e.dataTransfer.getData("text/plain");
+          const fromTile = e.dataTransfer.getData("tile");
+
+          const toTile = e.currentTarget;
+          const temp = toTile.innerHTML;
+          toTile.innerHTML = fromTile;
+
+          const fromElement = Array.from(document.querySelectorAll("#puzzle .tile img"))
+            .find(img => img.dataset.index === fromIndex);
+          if (fromElement) {
+            fromElement.parentElement.innerHTML = temp;
+          }
+
+          addDragEvents();
+          checkPuzzle();
+        });
+      });
+    }
+
+    function checkPuzzle() {
+      const current = Array.from(puzzle.querySelectorAll(".tile img")).map(img => parseInt(img.dataset.index));
+      const correct = current.every((val, idx) => val === idx);
+      if (correct) {
+        nextStageBtn.disabled = false;
+      }
+    }
+
+    function showNextStage() {
+      document.getElementById("controls").style.display = "none";
+      puzzle.style.display = "none";
+      nextText.classList.remove("hidden");
+    }
+
+    createPuzzle();
+  </script>
 </body>
 </html>
