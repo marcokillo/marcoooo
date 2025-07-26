@@ -124,9 +124,30 @@ function checkWin() {
   }
 }
 
-// انتقال به مرحله بعد با دکمه
 nextStageBtn.addEventListener("click", () => {
   window.location.href = "next.html";
 });
+
+function loadSolvedPuzzle() {
+  puzzle.innerHTML = "";
+  message.innerHTML = "";
+  nextStageBtn.style.display = "none";
+
+  for (let i = 0; i < 12; i++) {
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.draggable = true;
+
+    const img = document.createElement("img");
+    img.src = "tiles/tile-" + String(i).padStart(2, '0') + ".jpg";
+    img.alt = "Tile " + i;
+    img.dataset.index = i;
+
+    tile.appendChild(img);
+    puzzle.appendChild(tile);
+  }
+
+  addEvents();
+}
 
 window.onload = initPuzzle;
