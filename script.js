@@ -19,8 +19,8 @@ function initPuzzle() {
     tile.draggable = true;
 
     const img = document.createElement("img");
-    img.src = `tiles/tile-${String(imgIndex).padStart(2, '0')}.jpg`;
-    img.alt = `Tile ${imgIndex}`;
+   img.src = "tiles/tile-" + String(imgIndex).padStart(2, '0') + ".jpg";
+   img.alt = "Tile " + imgIndex
     img.dataset.index = imgIndex;
 
     tile.appendChild(img);
@@ -101,21 +101,23 @@ function swapTiles(tile1, tile2) {
 }
 
 function checkWin() {
-  const tiles = Array.from(document.querySelectorAll(".tile"));
-  const correct = tiles.every((tile, index) => {
-    const img = tile.querySelector("img");
-    return Number(img.dataset.index) === index;
-  });
+  const images = Array.from(document.querySelectorAll(".tile img"));
+  const correct = images.every((img, index) => Number(img.dataset.index) === index);
 
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
     nextStageBtn.style.display = "inline-block";
+
+    // ✅ انتقال خودکار به مرحله بعد (اختیاری)
+    setTimeout(() => {
+      window.location.href = "next.html";
+    }, 3000); // ۳ ثانیه تأخیر
   } else {
     nextStageBtn.style.display = "none";
   }
 }
 
-// انتقال به مرحله بعد (فایل next.html)
+// انتقال به مرحله بعد با دکمه
 nextStageBtn.addEventListener("click", () => {
   window.location.href = "next.html";
 });
