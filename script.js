@@ -107,11 +107,10 @@ function checkWin() {
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
     nextStageBtn.style.display = "inline-block";
-
-    // ✅ انتقال خودکار به مرحله بعد (اختیاری)
+  
     setTimeout(() => {
       window.location.href = "next.html";
-    }, 3000); // ۳ ثانیه تأخیر
+    }, 3000); 
   } else {
     nextStageBtn.style.display = "none";
   }
