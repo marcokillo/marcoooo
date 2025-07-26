@@ -104,18 +104,19 @@ function checkWin() {
   const images = Array.from(document.querySelectorAll(".tile img"));
   const correct = images.every((img, index) => Number(img.dataset.index) === index);
 
+  console.log("Puzzle Solved:", correct); 
+
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
     nextStageBtn.style.display = "inline-block";
-  
+
     setTimeout(() => {
       window.location.href = "next.html";
-    }, 3000); 
+    }, 3000);
   } else {
     nextStageBtn.style.display = "none";
   }
 }
-
 // انتقال به مرحله بعد با دکمه
 nextStageBtn.addEventListener("click", () => {
   window.location.href = "next.html";
