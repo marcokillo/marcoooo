@@ -102,13 +102,15 @@ function swapTiles(tile1, tile2) {
 
 function checkWin() {
   const tiles = document.querySelectorAll(".tile");
-  
-  const correct = Array.from(tiles).every((tile, index) => {
+
+  const indices = Array.from(tiles).map(tile => {
     const img = tile.querySelector("img");
-    return Number(img.dataset.index) === index;
+    return Number(img.dataset.index);
   });
 
-  console.log("Puzzle Solved:", correct); // فقط برای تست - می‌تونی حذفش کنی
+  const correct = indices.every((val, i) => val === i);
+
+  console.log("Puzzle Solved:", correct);
 
   if (correct) {
     message.innerHTML = "🎉 تبریک! پازل با موفقیت حل شد!";
@@ -121,6 +123,7 @@ function checkWin() {
     nextStageBtn.style.display = "none";
   }
 }
+
 // انتقال به مرحله بعد با دکمه
 nextStageBtn.addEventListener("click", () => {
   window.location.href = "next.html";
