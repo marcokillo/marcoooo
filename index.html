@@ -1,168 +1,414 @@
+
 <!DOCTYPE html>
-<html lang="fa">
+<html dir="rtl" lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>پازل جنایی</title>
-  <style>
-    body {
-      background: #111;
-      color: #eee;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      direction: rtl;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پازل مرموز</title>
+    <style>
+        :root {
+            --dark-color: #121212;
+            --blood-red: #8B0000;
+            --crime-scene-yellow: #F5DEB3;
+            --fog-color: rgba(10, 10, 10, 0.7);
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--dark-color);
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            transition: all 1s ease;
+        }
+        
+        .crime-scene-tape {
+            background: repeating-linear-gradient(
+                45deg,
+                var(--blood-red),
+                var(--blood-red) 10px,
+                var(--crime-scene-yellow) 10px,
+                var(--crime-scene-yellow) 20px
+            );
+            height: 8px;
+            width: 100%;
+            margin: 15px 0;
+        }
+        
+        #puzzle-stage {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        #puzzle-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin: 20px auto;
+            width: 600px;
+            height: 450px;
+        }
+        
+        .puzzle-piece {
+            width: 100%;
+            height: 100%;
+            background-size: 600px 450px;
+            cursor: pointer;
+            border: 1px solid #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .puzzle-piece::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .puzzle-piece:hover {
+            transform: scale(0.98);
+            box-shadow: 0 0 10px var(--blood-red);
+            z-index: 10;
+        }
+        
+        #controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        button {
+            background-color: var(--blood-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button:hover {
+            background-color: #6b0000;
+            letter-spacing: 2px;
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        button:hover::after {
+            left: 100%;
+        }
+        
+        #message {
+            font-weight: bold;
+            color: var(--blood-red);
+            height: 30px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 18px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px rgba(139, 0, 0, 0.7);
+        }
+        
+        /* صفحه مرموز */
+        #secret-page {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
 
-    #puzzle {
-      display: grid;
-      grid-template-columns: repeat(4, 150px);
-      grid-template-rows: repeat(3, 150px);
-      gap: 2px;
-      justify-content: center;
-      margin: 30px auto;
-    }
-
-    .tile {
-      width: 150px;
-      height: 150px;
-      border: 1px solid #333;
-      overflow: hidden;
-    }
-
-    .tile img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    button {
-      background: #222;
-      color: #fff;
-      border: 1px solid #444;
-      padding: 10px 20px;
-      margin: 10px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.4;
-      cursor: default;
-    }
-
-    #nextText {
-      margin-top: 30px;
-      font-size: 18px;
-      color: #ccc;
-      line-height: 2;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
+خواهری, [7/26/2025 10:34 PM]
+padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .fog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fogFilter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/></filter><rect width="100%" height="100%" filter="url(%23fogFilter)" opacity="0.5"/></svg>');
+            animation: fogMovement 20s infinite linear;
+            pointer-events: none;
+        }
+        
+        @keyframes fogMovement {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 1000px; }
+        }
+        
+        .mysterious-text {
+            color: #a0a0a0;
+            font-size: 22px;
+            line-height: 1.8;
+            text-align: center;
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+            animation: textGlow 5s infinite alternate;
+            border-left: 2px solid var(--blood-red);
+            padding-left: 20px;
+        }
+        
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(160, 160, 160, 0.3); }
+            100% { text-shadow: 0 0 15px rgba(160, 160, 160, 0.8); }
+        }
+        
+        .evidence-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--blood-red);
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        /* افکت نور چراغ قوه */
+        .flashlight-effect {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            pointer-events: none;
+            z-index: 3;
+            display: none;
+        }
+        
+        /* ریسپانسیو */
+        @media (max-width: 700px) {
+            #puzzle-container {
+                width: 90vw;
+                height: calc(90vw * 0.75);
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .puzzle-piece {
+                background-size: 300% 400%;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>پازل جنایی</h1>
+    <div class="crime-scene-tape"></div>
+    
+    <div id="puzzle-stage">
+        <div class="evidence-number">پرونده #X-247</div>
+        <h1 style="text-align: center; color: var(--blood-red);">پازل مرموز</h1>
+        <p style="text-align: center; color: #888;">12 قطعه را کنار هم بچینید تا راز را کشف کنید...</p>
+        
+        <div id="puzzle-container"></div>
+        
+        <div id="controls">
+            <button id="shuffle-btn">برزدن قطعات</button>
+        </div>
+        <div id="message"></div>
+    </div>
+    
+    <div id="secret-page">
+        <div class="fog"></div>
+        <div class="flashlight-effect" id="flashlight"></div>
+        <div class="mysterious-text">
+            این‌بار، اجازه دادم سایه‌اش وارد بوم شود...<br>
+            نه از روی ترس، بلکه از خستگی.<br>
+            شاید اگر ردپایش را روی کاغذ ببیند، بفهمد که من مدت‌هاست او را دیده‌ام.<br>
+            و شاید، فقط شاید، از تعقیبم دست بکشد.
+        </div>
+    </div>
 
-  <div id="controls">
-    <button onclick="shuffleTiles()">شروع دوباره</button>
-    <button id="nextStage" disabled onclick="showNextStage()">مرحله بعد</button>
-  </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const puzzleContainer = document.getElementById('puzzle-container');
+            const shuffleBtn = document.getElementById('shuffle-btn');
+            const messageEl = document.getElementById('message');
+            const secretPage = document.getElementById('secret-page');
+            const flashlight = document.getElementById('flashlight');
+            
+            // عکس شما - اینجا قرار داده شده
+            const imageUrl = 'https://i.ibb.co/Y7zVxK42/IMG-6603.jpg';
+            
+            let pieces = [];
+            let emptyIndex = 11; // خانه خالی آخر (برای 12 تکه)
+            const rows = 3;
+            const cols = 4;
 
-  <div id="puzzle"></div>
+خواهری, [7/26/2025 10:34 PM]
+const totalPieces = rows * cols;
+            
+            // ایجاد پازل اولیه
+            createPuzzle();
+            
+            // تابع ایجاد پازل
+            function createPuzzle() {
+                puzzleContainer.innerHTML = '';
+                pieces = [];
+                
+                // ایجاد 12 تکه (برای پازل 3x4)
+                for (let i = 0; i < totalPieces; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'puzzle-piece';
+                    if (i !== emptyIndex) {
+                        piece.style.backgroundImage = url('${imageUrl}'); // اصلاح شده با کوتیشن
+                        piece.style.backgroundPosition = -${(i % cols) * (100/cols)}% -${Math.floor(i / cols) * (100/rows)}%;
+                        piece.dataset.index = i;
+                        piece.addEventListener('click', movePiece);
+                        // برای پشتیبانی از تاچ
+                        piece.addEventListener('touchstart', movePiece, {passive: true});
+                    } else {
+                        piece.style.backgroundColor = '#222';
+                        piece.style.border = '1px dashed #444';
+                    }
+                    puzzleContainer.appendChild(piece);
+                    pieces.push(piece);
+                }
+                messageEl.textContent = '';
+            }
+            
+            // تابع حرکت تکه‌ها
+            function movePiece(e) {
+                e.preventDefault();
+                const clickedPiece = e.target;
+                const clickedIndex = parseInt(clickedPiece.dataset.index);
+                const emptyRow = Math.floor(emptyIndex / cols);
+                const emptyCol = emptyIndex % cols;
+                const clickedRow = Math.floor(clickedIndex / cols);
+                const clickedCol = clickedIndex % cols;
+                
+                // چک کردن مجاورت با خانه خالی
+                if ((Math.abs(clickedRow - emptyRow) === 1 && clickedCol === emptyCol) ||
+                    (Math.abs(clickedCol - emptyCol) === 1 && clickedRow === emptyRow)) {
+                    
+                    // جابجایی تصویر
+                    pieces[emptyIndex].style.backgroundImage = clickedPiece.style.backgroundImage;
+                    pieces[emptyIndex].style.backgroundPosition = clickedPiece.style.backgroundPosition;
+                    pieces[emptyIndex].dataset.index = clickedPiece.dataset.index;
+                    
+                    // خانه کلیک شده رو خالی کن
+                    clickedPiece.style.backgroundImage = '';
+                    clickedPiece.removeAttribute('data-index');
+                    clickedPiece.style.backgroundColor = '#222';
+                    clickedPiece.style.border = '1px dashed #444';
+                    
+                    // اضافه کردن رویدادها به خانه جدید
+                    pieces[emptyIndex].addEventListener('click', movePiece);
+                    pieces[emptyIndex].addEventListener('touchstart', movePiece, {passive: true});
+                    clickedPiece.removeEventListener('click', movePiece);
+                    clickedPiece.removeEventListener('touchstart', movePiece);
+                    
+                    emptyIndex = clickedIndex;
+                    checkWin();
+                }
+            }
+            
+            // برزدن پازل
+            shuffleBtn.addEventListener('click', () => {
+                // 200 حرکت تصادفی برای برزدن
+                for (let i = 0; i < 200; i++) {
+                    const neighbors = [];
+                    const emptyRow = Math.floor(emptyIndex / cols);
+                    const emptyCol = emptyIndex % cols;
+                    
+                    // پیدا کردن همسایه‌های مجاز
+                    if (emptyRow > 0) neighbors.push(emptyIndex - cols); // بالا
+                    if (emptyRow < rows - 1) neighbors.push(emptyIndex + cols); // پایین
+                    if (emptyCol > 0) neighbors.push(emptyIndex - 1); // چپ
+                    if (emptyCol < cols - 1) neighbors.push(emptyIndex + 1); // راست
 
-  <div id="nextText" class="hidden">
-    <p>این‌بار، اجازه دادم سایه‌اش وارد بوم شود...<br>
-      نه از روی ترس، بلکه از خستگی.<br>
-      شاید اگر ردپایش را روی کاغذ ببیند، بفهمد که من مدت‌هاست او را دیده‌ام.<br>
-      و شاید، فقط شاید، از تعقیبم دست بکشد.
-    </p>
-    <button onclick="location.reload()">🔁 بازگشت به پازل</button>
-  </div>
-
-  <script>
-    const puzzle = document.getElementById("puzzle");
-    const nextStageBtn = document.getElementById("nextStage");
-    const nextText = document.getElementById("nextText");
-
-    let tileCount = 12;
-
-    function createPuzzle() {
-      puzzle.innerHTML = "";
-
-      for (let i = 0; i < tileCount; i++) {
-        const tile = document.createElement("div");
-        tile.className = "tile";
-
-        const img = document.createElement("img");
-        img.src = "tiles/tile-" + String(i).padStart(2, '0') + ".jpg";
-        img.dataset.index = i;
-
-        tile.appendChild(img);
-        puzzle.appendChild(tile);
-      }
-
-      addDragEvents();
-    }
-
-    function shuffleTiles() {
-      const tiles = Array.from(puzzle.children);
-      for (let i = tiles.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        puzzle.insertBefore(tiles[j], tiles[i]);
-      }
-      nextStageBtn.disabled = true;
-      nextText.classList.add("hidden");
-      addDragEvents();
-    }
-
-    function addDragEvents() {
-      const imgs = document.querySelectorAll("#puzzle img");
-      imgs.forEach(img => {
-        img.draggable = true;
-
-        img.addEventListener("dragstart", (e) => {
-          e.dataTransfer.setData("text/plain", e.target.dataset.index);
-          e.dataTransfer.setData("tile", e.target.parentElement.innerHTML);
+خواهری, [7/26/2025 10:34 PM]
+// انتخاب یک همسایه تصادفی
+                    const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    const neighborPiece = pieces[randomNeighbor];
+                    
+                    // جابجایی
+                    pieces[emptyIndex].style.backgroundImage = neighborPiece.style.backgroundImage;
+                    pieces[emptyIndex].style.backgroundPosition = neighborPiece.style.backgroundPosition;
+                    pieces[emptyIndex].dataset.index = neighborPiece.dataset.index;
+                    pieces[emptyIndex].style.backgroundColor = '';
+                    pieces[emptyIndex].style.border = '1px solid #333';
+                    
+                    neighborPiece.style.backgroundImage = '';
+                    neighborPiece.removeAttribute('data-index');
+                    neighborPiece.style.backgroundColor = '#222';
+                    neighborPiece.style.border = '1px dashed #444';
+                    
+                    // به‌روزرسانی رویدادها
+                    pieces[emptyIndex].addEventListener('click', movePiece);
+                    pieces[emptyIndex].addEventListener('touchstart', movePiece, {passive: true});
+                    neighborPiece.removeEventListener('click', movePiece);
+                    neighborPiece.removeEventListener('touchstart', movePiece);
+                    
+                    emptyIndex = randomNeighbor;
+                }
+                messageEl.textContent = 'قطعات برزده شدند...';
+                setTimeout(() => { messageEl.textContent = ''; }, 2000);
+            });
+            
+            // چک کردن برنده شدن
+            function checkWin() {
+                let isWin = true;
+                for (let i = 0; i < pieces.length; i++) {
+                    if (i !== emptyIndex && parseInt(pieces[i].dataset.index) !== i) {
+                        isWin = false;
+                        break;
+                    }
+                }
+                if (isWin) {
+                    messageEl.textContent = 'پرونده حل شد! وارد مرحله بعد می‌شوید...';
+                    setTimeout(() => {
+                        document.body.style.backgroundColor = '#000';
+                        document.getElementById('puzzle-stage').style.opacity = '0';
+                        secretPage.style.display = 'flex';
+                        
+                        // فعال کردن افکت چراغ قوه
+                        flashlight.style.display = 'block';
+                        document.addEventListener('mousemove', followFlashlight);
+                        document.addEventListener('touchmove', followFlashlightTouch, {passive: true});
+                    }, 2000);
+                }
+            }
+            
+            // افکت چراغ قوه در صفحه مرموز
+            function followFlashlight(e) {
+                flashlight.style.left = (e.clientX - 100) + 'px';
+                flashlight.style.top = (e.clientY - 100) + 'px';
+            }
+            
+            function followFlashlightTouch(e) {
+                flashlight.style.left = (e.touches[0].clientX - 100) + 'px';
+                flashlight.style.top = (e.touches[0].clientY - 100) + 'px';
+            }
         });
-
-        img.parentElement.addEventListener("dragover", (e) => e.preventDefault());
-
-        img.parentElement.addEventListener("drop", (e) => {
-          e.preventDefault();
-          const fromIndex = e.dataTransfer.getData("text/plain");
-          const fromTile = e.dataTransfer.getData("tile");
-
-          const toTile = e.currentTarget;
-          const temp = toTile.innerHTML;
-          toTile.innerHTML = fromTile;
-
-          const fromElement = Array.from(document.querySelectorAll("#puzzle .tile img"))
-            .find(img => img.dataset.index === fromIndex);
-          if (fromElement) {
-            fromElement.parentElement.innerHTML = temp;
-          }
-
-          addDragEvents();
-          checkPuzzle();
-        });
-      });
-    }
-
-    function checkPuzzle() {
-      const current = Array.from(puzzle.querySelectorAll(".tile img")).map(img => parseInt(img.dataset.index));
-      const correct = current.every((val, idx) => val === idx);
-      if (correct) {
-        nextStageBtn.disabled = false;
-      }
-    }
-
-    function showNextStage() {
-      document.getElementById("controls").style.display = "none";
-      puzzle.style.display = "none";
-      nextText.classList.remove("hidden");
-    }
-
-    createPuzzle();
-  </script>
+    </script>
 </body>
 </html>
