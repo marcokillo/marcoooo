@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قفل ترکیبی ریسپانسیو</title>
+<title>قفل ترکیبی حرفه‌ای</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * {margin:0; padding:0; box-sizing:border-box;}
@@ -15,6 +15,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
+    overflow:hidden;
 }
 
 .myCenter {text-align:center;}
@@ -26,7 +27,7 @@ body {
     background: linear-gradient(145deg,#f8f8f8 0%,#e8e8e8 20%,#d0d0d0 40%,#b8b8b8 60%,#a0a0a0 80%,#909090 100%);
     border-radius:30px;
     box-shadow:0 20px 40px rgba(0,0,0,0.5);
-    max-width: 95vw;
+    max-width:95vw;
 }
 
 .lockWrapper {
@@ -36,9 +37,9 @@ body {
     display:flex;
     justify-content:center;
     align-items:center;
-    flex-wrap:wrap;
     padding:10px;
     gap:10px;
+    flex-wrap:nowrap; /* ❌ دیگر اجازه نمی‌دهد بره پایین */
 }
 
 .dial {
@@ -134,19 +135,15 @@ body {
     20%,40%,60%,80%{transform:translateX(5px);}
 }
 
-/* 🎯 واکنش‌گرایی برای موبایل */
+/* 📱 واکنش‌گرایی بدون افتادن قفل */
 @media (max-width: 600px) {
+    body {padding:10px;}
     .myLock {padding:25px 20px;}
-    .lockWrapper {height:auto; padding:15px;}
-    .dial {width:65px; height:170px; font-size:38px;}
-    .dial-display {width:55px; height:60px; font-size:36px;}
+    .lockWrapper {height:200px; gap:6px;}
+    .dial {width:60px; height:170px; font-size:36px;}
+    .dial-display {width:50px; height:60px; font-size:34px;}
     .arrow {font-size:24px;}
-    .btnEnter {
-        width: 220px;
-        height: 55px;
-        font-size: 20px;
-        line-height: 55px;
-    }
+    .btnEnter {width:220px; height:55px; font-size:20px;}
 }
 </style>
 </head>
