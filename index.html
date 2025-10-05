@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قفل ترکیبی حرفه‌ای</title>
+<title>قفل ترکیبی ریسپانسیو</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * {margin:0; padding:0; box-sizing:border-box;}
@@ -14,6 +14,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .myCenter {text-align:center;}
@@ -21,20 +22,23 @@ body {
 .myLock {
     display:inline-block;
     text-align:center;
-    padding:60px 70px;
+    padding:40px 50px;
     background: linear-gradient(145deg,#f8f8f8 0%,#e8e8e8 20%,#d0d0d0 40%,#b8b8b8 60%,#a0a0a0 80%,#909090 100%);
-    border-radius:35px;
-    box-shadow:0 30px 60px rgba(0,0,0,0.5);
+    border-radius:30px;
+    box-shadow:0 20px 40px rgba(0,0,0,0.5);
+    max-width: 95vw;
 }
 
 .lockWrapper {
     background: linear-gradient(180deg,#1a1a1a 0%,#2d2d2d 10%,#1a1a1a 20%,#0d0d0d 80%,#000 100%);
     border-radius:15px;
-    height:250px;
+    height:240px;
     display:flex;
-    justify-content:space-between;
+    justify-content:center;
     align-items:center;
+    flex-wrap:wrap;
     padding:10px;
+    gap:10px;
 }
 
 .dial {
@@ -42,12 +46,11 @@ body {
     flex-direction:column;
     align-items:center;
     justify-content:space-between;
-    height:220px;
-    width:95px;
-    margin:0 10px;
+    height:200px;
+    width:80px;
     border-radius:10px;
     overflow:hidden;
-    font-size:52px;
+    font-size:48px;
     font-family:'Vazir', monospace;
     font-weight:700;
     position:relative;
@@ -63,8 +66,8 @@ body {
 .arrow:hover {transform:scale(1.2);}
 
 .dial-display {
-    width:70px;
-    height:80px;
+    width:65px;
+    height:75px;
     background:#000;
     border-radius:10px;
     display:flex;
@@ -72,11 +75,11 @@ body {
     align-items:center;
     box-shadow:inset 0 0 10px rgba(255,255,255,0.3);
     font-weight:bold;
-    font-size:48px;
+    font-size:44px;
     color:#fff;
 }
 
-/* رنگ‌بندی هر دیسک */
+/* رنگ‌بندی */
 .dial:nth-child(1){background:linear-gradient(180deg,#001133 0%,#002255 100%);}
 .dial:nth-child(2){background:linear-gradient(180deg,#330000 0%,#ff0000 100%);}
 .dial:nth-child(3){
@@ -90,17 +93,20 @@ body {
 .dial:nth-child(4){background:linear-gradient(180deg,#000 0%,#5a5a5a 100%);}
 
 .btnEnter {
-    font-size:24px;
+    font-size:22px;
     font-weight:700;
     cursor:pointer;
-    margin:30px auto 0;
-    width:320px;
-    height:65px;
-    line-height:65px;
+    margin:25px auto 0;
+    width:280px;
+    height:60px;
+    line-height:60px;
     background:linear-gradient(145deg,#f0f0f0 0%,#e0e0e0 50%,#d0d0d0 100%);
-    border-radius:32px;
-    box-shadow:0 10px 20px rgba(0,0,0,0.2);
+    border-radius:30px;
+    box-shadow:0 8px 16px rgba(0,0,0,0.2);
     transition:all 0.15s ease;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 .modal {
@@ -115,15 +121,32 @@ body {
 .modal.show{display:flex;}
 .modal-content {
     background:white;
-    padding:20px;
+    padding:25px;
     border-radius:10px;
     text-align:center;
+    width:90%;
+    max-width:350px;
 }
 
 @keyframes shake {
     0%,100%{transform:translateX(0);}
     10%,30%,50%,70%,90%{transform:translateX(-5px);}
     20%,40%,60%,80%{transform:translateX(5px);}
+}
+
+/* 🎯 واکنش‌گرایی برای موبایل */
+@media (max-width: 600px) {
+    .myLock {padding:25px 20px;}
+    .lockWrapper {height:auto; padding:15px;}
+    .dial {width:65px; height:170px; font-size:38px;}
+    .dial-display {width:55px; height:60px; font-size:36px;}
+    .arrow {font-size:24px;}
+    .btnEnter {
+        width: 220px;
+        height: 55px;
+        font-size: 20px;
+        line-height: 55px;
+    }
 }
 </style>
 </head>
