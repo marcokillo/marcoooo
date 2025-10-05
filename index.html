@@ -1,273 +1,354 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>قفل ترکیبی حرفه‌ای</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
-<style>
-* {margin:0; padding:0; box-sizing:border-box;}
-body {
-    background: radial-gradient(ellipse at center, #2a2a2a 0%, #1a1a1a 40%, #0a0a0a 100%);
-    font-family: 'Vazir', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    overflow:hidden;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>راهنمایی‌ها</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      direction: rtl;
+      background-color: #111;
+      color: #eee;
+      font-family: 'Vazir', Tahoma, sans-serif;
+      padding: 20px;
+      line-height: 1.6;
+      overflow-x: hidden; /* جلوگیری از بیرون زدن افقی */
+      min-height: 100vh;
+    }
+    h1 {
+      text-align: center;
+      color: #00d1b2;
+      margin-bottom: 30px;
+      font-size: 2em;
+      text-shadow: 0 0 10px rgba(0, 209, 178, 0.5);
+    }
+    .hint-box {
+      border: 1px solid #444;
+      background: linear-gradient(145deg, #1c1c1c, #222);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 25px;
+      position: relative;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s ease;
+      width: 100%; /* اطمینان از عرض کامل */
+      max-width: 100%;
+    }
+    .hint-box:hover {
+      box-shadow: 0 6px 20px rgba(0, 209, 178, 0.2);
+    }
+    .hint-title {
+      cursor: pointer;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #00d1b2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      transition: color 0.3s ease;
+    }
+    .hint-title:hover {
+      color: #00ffcc;
+    }
+    .arrow {
+      transition: transform 0.3s;
+      margin-left: 10px;
+      font-size: 1.1em;
+    }
+    .hint-content {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+    .hint-content.show {
+      max-height: 500px;
+      opacity: 1;
+      padding: 10px;
+    }
+    .answer {
+      display: none;
+      margin-top: 15px;
+      color: #ffd700;
+      font-weight: bold;
+      padding: 10px;
+      background: rgba(255, 215, 0, 0.1);
+      border-radius: 8px;
+      border-left: 4px solid #ffd700;
+    }
+    .show-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(145deg, #444, #555);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-family: 'Vazir', sans-serif;
+    }
+    .show-btn:hover {
+      background: linear-gradient(145deg, #666, #777);
+      transform: translateY(-2px);
+    }
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(255, 85, 85, 0.2);
+      border: none;
+      color: #ff5555;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: none;
+      transition: background 0.3s ease;
+    }
+    .close-btn:hover {
+      background: rgba(255, 85, 85, 0.4);
+    }
+    .hint-box.open .close-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hint-box.open .arrow {
+      transform: rotate(90deg);
+    }
+    p {
+      margin-bottom: 10px;
+    }
 
-.myCenter {text-align:center;}
+    /* ریسپانسیو برای موبایل و تبلت */
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+      }
+      .hint-box {
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+      }
+      .hint-title {
+        font-size: 1.1em;
+      }
+      .arrow {
+        font-size: 1em;
+        margin-left: 8px;
+      }
+      .hint-content {
+        font-size: 0.95em;
+      }
+      .show-btn {
+        padding: 6px 12px;
+        font-size: 0.9em;
+      }
+      .close-btn {
+        top: 10px;
+        left: 10px;
+        width: 25px;
+        height: 25px;
+        font-size: 16px;
+      }
+    }
 
-.myLock {
-    display:inline-block;
-    text-align:center;
-    padding:40px 50px;
-    background: linear-gradient(145deg,#f8f8f8 0%,#e8e8e8 20%,#d0d0d0 40%,#b8b8b8 60%,#a0a0a0 80%,#909090 100%);
-    border-radius:30px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.5);
-    max-width:95vw;
-}
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      h1 {
+        font-size: 1.3em;
+      }
+      .hint-box {
+        padding: 12px;
+        margin-bottom: 15px;
+      }
+      .hint-title {
+        font-size: 1em;
+        padding: 8px 0;
+      }
+      .hint-content {
+        margin-top: 10px;
+        padding: 0 5px;
+      }
+      .hint-content.show {
+        padding: 5px;
+      }
+      .show-btn {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.85em;
+      }
+      .answer {
+        padding: 8px;
+        font-size: 0.9em;
+      }
+    }
 
-.lockWrapper {
-    background: linear-gradient(180deg,#1a1a1a 0%,#2d2d2d 10%,#1a1a1a 20%,#0d0d0d 80%,#000 100%);
-    border-radius:15px;
-    height:240px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:10px;
-    gap:10px;
-    flex-wrap:nowrap; /* ❌ دیگر اجازه نمی‌دهد بره پایین */
-}
-
-.dial {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:space-between;
-    height:200px;
-    width:80px;
-    border-radius:10px;
-    overflow:hidden;
-    font-size:48px;
-    font-family:'Vazir', monospace;
-    font-weight:700;
-    position:relative;
-    color:#fff;
-}
-
-.arrow {
-    cursor:pointer;
-    font-size:28px;
-    user-select:none;
-    transition:transform 0.2s;
-}
-.arrow:hover {transform:scale(1.2);}
-
-.dial-display {
-    width:65px;
-    height:75px;
-    background:#000;
-    border-radius:10px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:inset 0 0 10px rgba(255,255,255,0.3);
-    font-weight:bold;
-    font-size:44px;
-    color:#fff;
-}
-
-/* رنگ‌بندی */
-.dial:nth-child(1){background:linear-gradient(180deg,#001133 0%,#002255 100%);}
-.dial:nth-child(2){background:linear-gradient(180deg,#330000 0%,#ff0000 100%);}
-.dial:nth-child(3){
-    background:linear-gradient(180deg,#e6c200 0%,#ffee00 100%);
-    color:#000;
-}
-.dial:nth-child(3) .dial-display {
-    background:#fff7a1;
-    color:#000;
-}
-.dial:nth-child(4){background:linear-gradient(180deg,#000 0%,#5a5a5a 100%);}
-
-.btnEnter {
-    font-size:22px;
-    font-weight:700;
-    cursor:pointer;
-    margin:25px auto 0;
-    width:280px;
-    height:60px;
-    line-height:60px;
-    background:linear-gradient(145deg,#f0f0f0 0%,#e0e0e0 50%,#d0d0d0 100%);
-    border-radius:30px;
-    box-shadow:0 8px 16px rgba(0,0,0,0.2);
-    transition:all 0.15s ease;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-.modal {
-    display:none;
-    position:fixed;
-    top:0;left:0;width:100%;height:100%;
-    background:rgba(0,0,0,0.7);
-    justify-content:center;
-    align-items:center;
-    z-index:1000;
-}
-.modal.show{display:flex;}
-.modal-content {
-    background:white;
-    padding:25px;
-    border-radius:10px;
-    text-align:center;
-    width:90%;
-    max-width:350px;
-}
-
-@keyframes shake {
-    0%,100%{transform:translateX(0);}
-    10%,30%,50%,70%,90%{transform:translateX(-5px);}
-    20%,40%,60%,80%{transform:translateX(5px);}
-}
-
-/* 📱 واکنش‌گرایی بدون افتادن قفل */
-@media (max-width: 600px) {
-    body {padding:10px;}
-    .myLock {padding:25px 20px;}
-    .lockWrapper {height:200px; gap:6px;}
-    .dial {width:60px; height:170px; font-size:36px;}
-    .dial-display {width:50px; height:60px; font-size:34px;}
-    .arrow {font-size:24px;}
-    .btnEnter {width:220px; height:55px; font-size:20px;}
-}
-</style>
+    @media (max-width: 360px) {
+      body {
+        padding: 5px;
+      }
+      h1 {
+        font-size: 1.2em;
+        margin-bottom: 15px;
+      }
+      .hint-box {
+        padding: 10px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+      }
+      .hint-title {
+        font-size: 0.95em;
+      }
+      .close-btn {
+        top: 8px;
+        left: 8px;
+        width: 22px;
+        height: 22px;
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="myCenter">
-    <div id="lock" data-dials="4">
-        <div class="status-display" id="statusDisplay">🔒 قفل شده</div>
+
+  <h1>راهنمایی‌ها</h1>
+
+  <!-- راهنمایی ۱ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۱ - جدول سودوکوی حروف</span>
+      <span class="arrow">▶</span>
     </div>
-    <div class="btnEnter" id="enterBtn">🔓 باز کردن</div>
-</div>
-
-<div class="modal" id="successModal">
-    <div class="modal-content">
-        <h2>✅ رمز صحیح است!</h2>
-        <p>پاکت را باز کنید.</p>
-        <button id="closeModal">بستن</button>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>قوانین سودوکو به شرح زیر است:<br>
+      در ستون‌ها، سطرها و مستطیل‌ها حروف تکراری قرار نگیرد.<br>
+      بعد از اتمام جدول، حروف را از چپ به راست بخوان.</p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">کاترین</p>
     </div>
-</div>
+  </div>
 
-<script>
-class CombinationLock {
-    constructor(element, options = {}) {
-        this.element = element;
-        this.dials = options.dials || 4;
-        this.correctCode = options.correctCode || '5263';
-        this.currentCode = new Array(this.dials).fill(0);
-        this.isLocked = true;
-        this.init();
+  <!-- راهنمایی ۲ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۲ - گاوصندوق استیو</span>
+      <span class="arrow">▶</span>
+    </div>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>به هر برگه دقت کن میخواهد چیزی به تو نشان دهد<br>
+      هر خطی که چشم می‌بیند، یک راز پنهان دارد… بشمار تا راز را پیدا کنی</p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">46530</p>
+    </div>
+  </div>
+
+  <!-- راهنمایی ۳ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۳ - گوشی الکساندرا</span>
+      <span class="arrow">▶</span>
+    </div>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>به بازجویی‌ها توجه کن. دارن یک تاریخ خاصی رو نشونت می‌دن.<br>
+      شاید لازم باشه کمی محاسبه انجام بدی.</p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">1965 تاریخ تولد استیو</p>
+    </div>
+  </div>
+
+  <!-- راهنمایی ۴ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۴ - کیف استیو</span>
+      <span class="arrow">▶</span>
+    </div>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>به وسایل شخصی استیو دقت کن حرفی برای گفتن دارد <br>
+      </p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">3625</p>
+    </div>
+  </div>
+
+  <!-- راهنمایی ۵ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۵ - نقاشی الکساندرا</span>
+      <span class="arrow">▶</span>
+    </div>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>
+دریانوردان قدیم این زبان را بهتر از هر ملوانی می‌شناختند.»
+گاهی یک خط کوتاه کنار یک نقطه، به تنهایی یک حرف کامل است.»</p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">سایه</p>
+    </div>
+  </div>
+
+  <!-- راهنمایی ۶ -->
+  <div class="hint-box">
+    <div class="hint-title" onclick="toggleHint(this)">
+      <span>راهنمایی ۶ - لپ تاپ جاناتان</span>
+      <span class="arrow">▶</span>
+    </div>
+    <button class="close-btn" onclick="closeHint(this)">✖</button>
+    <div class="hint-content">
+      <p>نامی که کاراگاه در گوشه هر برگه‌ی تحقیق می‌نوشت،حتی اگر ربطی به پرونده نداشت
+«او کسی بود که هرگز در پرونده‌ها متهم نشد،اما همیشه در قلب کارآگاه حاضر بود.»<br>
+      </p>
+      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
+      <p class="answer">755533</p>
+    </div>
+  </div>
+  
+  <script>
+    function toggleHint(titleElement) {
+      const box = titleElement.parentElement;
+      const content = box.querySelector(".hint-content");
+      box.classList.toggle("open");
+      content.classList.toggle("show");
     }
 
-    init() {
-        this.buildLock();
-        this.attachEvents();
+    function closeHint(closeBtn) {
+      const box = closeBtn.parentElement;
+      const content = box.querySelector(".hint-content");
+      box.classList.remove("open");
+      content.classList.remove("show");
     }
 
-    buildLock() {
-        this.element.className = 'myLock';
-        const wrapper = document.createElement('div');
-        wrapper.className = 'lockWrapper';
-
-        for (let i = 0; i < this.dials; i++) {
-            const dial = document.createElement('div');
-            dial.className = 'dial';
-            dial.dataset.index = i;
-
-            const up = document.createElement('div');
-            up.className = 'arrow';
-            up.textContent = '▲';
-
-            const display = document.createElement('div');
-            display.className = 'dial-display';
-            display.textContent = '0';
-
-            const down = document.createElement('div');
-            down.className = 'arrow';
-            down.textContent = '▼';
-
-            dial.appendChild(up);
-            dial.appendChild(display);
-            dial.appendChild(down);
-            wrapper.appendChild(dial);
-        }
-        this.element.appendChild(wrapper);
+    function toggleAnswer(button) {
+      const answer = button.nextElementSibling;
+      if (answer.style.display === "block") {
+        answer.style.display = "none";
+        button.textContent = "نمایش جواب نهایی";
+      } else {
+        answer.style.display = "block";
+        button.textContent = "مخفی کردن جواب";
+      }
     }
+  </script>
 
-    attachEvents() {
-        const dials = this.element.querySelectorAll('.dial');
-        const enterBtn = document.getElementById('enterBtn');
-        const modal = document.getElementById('successModal');
-
-        dials.forEach((dial, index) => {
-            const up = dial.querySelector('.arrow:first-child');
-            const down = dial.querySelector('.arrow:last-child');
-            up.addEventListener('click', () => this.changeNumber(index, -1));
-            down.addEventListener('click', () => this.changeNumber(index, 1));
-        });
-
-        enterBtn.addEventListener('click', () => this.checkCode());
-        document.getElementById('closeModal').addEventListener('click', () => {
-            modal.classList.remove('show');
-        });
-    }
-
-    changeNumber(index, dir) {
-        this.currentCode[index] = (this.currentCode[index] + dir + 10) % 10;
-        const dial = this.element.querySelectorAll('.dial')[index];
-        const display = dial.querySelector('.dial-display');
-        display.textContent = this.currentCode[index];
-        this.playClickSound();
-    }
-
-    checkCode() {
-        const entered = this.currentCode.join('');
-        const status = document.getElementById('statusDisplay');
-        const modal = document.getElementById('successModal');
-        if (entered === this.correctCode) {
-            this.isLocked = false;
-            status.textContent = '✅ باز شد!';
-            modal.classList.add('show');
-            this.playSuccessSound();
-        } else {
-            status.textContent = '❌ رمز اشتباه';
-            this.shakeAnimation();
-            this.playErrorSound();
-        }
-        setTimeout(() => {
-            status.textContent = this.isLocked ? '🔒 قفل شده' : '🔓 باز';
-        }, 2000);
-    }
-
-    shakeAnimation() {
-        const lock = this.element;
-        lock.style.animation = 'shake 0.5s ease-in-out';
-        setTimeout(() => lock.style.animation = '', 500);
-    }
-
-    playClickSound(){ if(navigator.vibrate) navigator.vibrate(30); }
-    playSuccessSound(){ if(navigator.vibrate) navigator.vibrate([100,50,100]); }
-    playErrorSound(){ if(navigator.vibrate) navigator.vibrate([200,100,200]); }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    new CombinationLock(document.getElementById('lock'), { correctCode: '5263' });
-});
-</script>
 </body>
 </html>
