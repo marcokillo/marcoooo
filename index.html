@@ -1,354 +1,660 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>راهنمایی‌ها</title>
-  <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      direction: rtl;
-      background-color: #111;
-      color: #eee;
-      font-family: 'Vazir', Tahoma, sans-serif;
-      padding: 20px;
-      line-height: 1.6;
-      overflow-x: hidden; /* جلوگیری از بیرون زدن افقی */
-      min-height: 100vh;
-    }
-    h1 {
-      text-align: center;
-      color: #00d1b2;
-      margin-bottom: 30px;
-      font-size: 2em;
-      text-shadow: 0 0 10px rgba(0, 209, 178, 0.5);
-    }
-    .hint-box {
-      border: 1px solid #444;
-      background: linear-gradient(145deg, #1c1c1c, #222);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 25px;
-      position: relative;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      transition: box-shadow 0.3s ease;
-      width: 100%; /* اطمینان از عرض کامل */
-      max-width: 100%;
-    }
-    .hint-box:hover {
-      box-shadow: 0 6px 20px rgba(0, 209, 178, 0.2);
-    }
-    .hint-title {
-      cursor: pointer;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #00d1b2;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 0;
-      transition: color 0.3s ease;
-    }
-    .hint-title:hover {
-      color: #00ffcc;
-    }
-    .arrow {
-      transition: transform 0.3s;
-      margin-left: 10px;
-      font-size: 1.1em;
-    }
-    .hint-content {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
-      margin-top: 15px;
-      padding: 0 10px;
-    }
-    .hint-content.show {
-      max-height: 500px;
-      opacity: 1;
-      padding: 10px;
-    }
-    .answer {
-      display: none;
-      margin-top: 15px;
-      color: #ffd700;
-      font-weight: bold;
-      padding: 10px;
-      background: rgba(255, 215, 0, 0.1);
-      border-radius: 8px;
-      border-left: 4px solid #ffd700;
-    }
-    .show-btn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(145deg, #444, #555);
-      color: #fff;
-      cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
-      font-family: 'Vazir', sans-serif;
-    }
-    .show-btn:hover {
-      background: linear-gradient(145deg, #666, #777);
-      transform: translateY(-2px);
-    }
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: rgba(255, 85, 85, 0.2);
-      border: none;
-      color: #ff5555;
-      font-size: 18px;
-      cursor: pointer;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      display: none;
-      transition: background 0.3s ease;
-    }
-    .close-btn:hover {
-      background: rgba(255, 85, 85, 0.4);
-    }
-    .hint-box.open .close-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hint-box.open .arrow {
-      transform: rotate(90deg);
-    }
-    p {
-      margin-bottom: 10px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پازل کلیدها</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* ریسپانسیو برای موبایل و تبلت */
-    @media (max-width: 768px) {
-      body {
-        padding: 15px;
-      }
-      h1 {
-        font-size: 1.5em;
-        margin-bottom: 20px;
-      }
-      .hint-box {
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 12px;
-      }
-      .hint-title {
-        font-size: 1.1em;
-      }
-      .arrow {
-        font-size: 1em;
-        margin-left: 8px;
-      }
-      .hint-content {
-        font-size: 0.95em;
-      }
-      .show-btn {
-        padding: 6px 12px;
-        font-size: 0.9em;
-      }
-      .close-btn {
-        top: 10px;
-        left: 10px;
-        width: 25px;
-        height: 25px;
-        font-size: 16px;
-      }
-    }
+        body {
+            font-family: 'Vazir', 'Georgia', serif;
+            background: linear-gradient(135deg, #000000 0%, #2c1810 50%, #3c2f2f 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #d9d9d9;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-      h1 {
-        font-size: 1.3em;
-      }
-      .hint-box {
-        padding: 12px;
-        margin-bottom: 15px;
-      }
-      .hint-title {
-        font-size: 1em;
-        padding: 8px 0;
-      }
-      .hint-content {
-        margin-top: 10px;
-        padding: 0 5px;
-      }
-      .hint-content.show {
-        padding: 5px;
-      }
-      .show-btn {
-        width: 100%;
-        padding: 8px;
-        font-size: 0.85em;
-      }
-      .answer {
-        padding: 8px;
-        font-size: 0.9em;
-      }
-    }
+        /* افکت ستاره‌های فضایی - ساده‌تر */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ccc, transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 90px 40px, #aaa, transparent);
+            background-repeat: repeat;
+            background-size: 150px 100px;
+            animation: starsTwinkle 25s linear infinite;
+            z-index: -1;
+            opacity: 0.3;
+        }
 
-    @media (max-width: 360px) {
-      body {
-        padding: 5px;
-      }
-      h1 {
-        font-size: 1.2em;
-        margin-bottom: 15px;
-      }
-      .hint-box {
-        padding: 10px;
-        margin-bottom: 12px;
-        border-radius: 10px;
-      }
-      .hint-title {
-        font-size: 0.95em;
-      }
-      .close-btn {
-        top: 8px;
-        left: 8px;
-        width: 22px;
-        height: 22px;
-        font-size: 14px;
-      }
-    }
-  </style>
+        @keyframes starsTwinkle {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-50px); }
+        }
+
+        /* CRT + نویز ملایم - کم‌رنگ‌تر */
+        .crt-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99999;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.03), rgba(0,0,0,0.03) 1px, transparent 1px, transparent 2px);
+            opacity: 0.2;
+            animation: scanline 12s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 5px; }
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            opacity: 0.005;
+            z-index: 99998;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+            animation: noiseMove 0.3s infinite;
+        }
+
+        @keyframes noiseMove {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-2px, 2px); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* عنوان مجلل - ساده‌تر */
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #a8a8a8;
+            font-weight: 700;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            text-shadow: 
+                0 0 15px #5c4a3a,
+                0 0 30px #3c2f2f,
+                0 0 45px #000000,
+                2px 2px 0 #000;
+            margin-bottom: 50px;
+            filter: contrast(1.1) brightness(1.05);
+            position: relative;
+            animation: titlePulse 5s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 15px #5c4a3a, 0 0 30px #3c2f2f, 0 0 45px #000000, 2px 2px 0 #000; }
+            50% { text-shadow: 0 0 25px #a8a8a8, 0 0 40px #a8a8a8, 0 0 55px #5c4a3a, 2px 2px 0 #000; }
+        }
+
+        /* باکس مجلل — ساده */
+        .question-box {
+            background: #2c1810;
+            border: 2px solid #3c2f2f;
+            padding: 50px 40px;
+            position: relative;
+            box-shadow: 
+                0 0 30px rgba(60,47,47,0.4),
+                inset 0 0 30px rgba(60,47,47,0.2),
+                10px 10px 0 rgba(0,0,0,0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .question-box:hover {
+            box-shadow: 
+                0 0 40px rgba(60,47,47,0.6),
+                inset 0 0 30px rgba(60,47,47,0.25);
+            transform: translateY(-3px);
+        }
+
+        /* لایه داخلی ساده */
+        .question-box::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #5c4a3a;
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 8px;
+            opacity: 0.5;
+        }
+
+        .question-text {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            line-height: 2.2;
+            margin-bottom: 35px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            color: #e0e0e0;
+            position: relative;
+            z-index: 5;
+            font-weight: 500;
+            letter-spacing: 1px;
+            animation: textFadeIn 1.2s ease-out;
+        }
+
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hole-section {
+            margin-bottom: 40px;
+        }
+
+        .hole-label {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            color: #a8a8a8;
+            font-weight: 700;
+            margin: 30px 0 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* باکس کلید - فلش سمت راست */
+        .key-selector-container {
+            margin-top: -5px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .key-select {
+            width: 100%;
+            padding: 20px 35px 20px 20px; /* padding سمت راست بیشتر */
+            font-size: 1.4rem;
+            background: #1a0f00;
+            border: 2px solid #3c2f2f;
+            color: #d9d9d9;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: inset 0 3px 10px rgba(0,0,0,0.8), 0 0 0 1px #5c4a3a inset;
+            font-family: 'Vazir', serif;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%238c7a6a' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+            background-position: left 15px center;
+            background-repeat: no-repeat;
+            background-size: 14px;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .key-select:focus {
+            border-color: #5c4a3a;
+            outline: none;
+            box-shadow: 0 0 25px rgba(92,74,58,0.5), 0 0 0 2px #3c2f2f inset;
+            transform: scale(1.01);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 90%;
+            max-width: 350px;
+            margin: 40px auto 0;
+            padding: 20px;
+            font-size: clamp(1.3rem, 4vw, 1.7rem);
+            font-weight: 600;
+            background: linear-gradient(135deg, #3c2f2f 0%, #5c4a3a 100%);
+            border: 2px solid #3c2f2f;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 
+                0 5px 0 #2c1810,
+                0 10px 20px rgba(0,0,0,0.7),
+                0 0 20px rgba(60,47,47,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 5;
+            font-family: 'Vazir', serif;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 8px 0 #2c1810,
+                0 15px 30px rgba(0,0,0,0.8),
+                0 0 30px rgba(60,47,47,0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #2c1810, 0 5px 10px rgba(0,0,0,0.6);
+        }
+
+        /* پیام خطا - ساده */
+        .error-message {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4a1c00, #6b2800);
+            color: #ffddcc;
+            padding: 20px 35px;
+            border: 2px solid #8b3a00;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            box-shadow: 
+                0 0 30px rgba(139,58,0,0.6),
+                8px 8px 0 rgba(0,0,0,0.8),
+                inset 0 0 15px rgba(255,255,255,0.1);
+            z-index: 100000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: all 0.4s ease;
+            font-family: 'Vazir', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            bottom: 45px;
+        }
+
+        /* مودال مجلل - ساده */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92);
+            z-index: 200000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: #2c1810;
+            border: 2px solid #3c2f2f;
+            padding: 50px 40px;
+            max-width: 95%;
+            width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            box-shadow: 
+                0 0 50px rgba(60,47,47,0.5),
+                inset 0 0 30px rgba(60,47,47,0.2),
+                15px 15px 0 rgba(0,0,0,0.9);
+            position: relative;
+            text-align: center;
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid #5c4a3a;
+            pointer-events: none;
+            border-radius: 8px;
+            opacity: 0.4;
+        }
+
+        .modal-text {
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            line-height: 2.2;
+            margin-bottom: 25px;
+            color: #e0e0e0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            font-weight: 500;
+            letter-spacing: 1px;
+            animation: textFadeIn 1.2s ease-out 0.1s both;
+            text-align: justify;
+        }
+
+        .modal-submit-btn {
+            width: 85%;
+            max-width: 320px;
+            margin: 0 auto;
+            padding: 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3c2f2f 0%, #5c4a3a 100%);
+            border: 2px solid #3c2f2f;
+            color: #ffffff;
+            cursor: pointer;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 0 #2c1810, 0 10px 20px rgba(0,0,0,0.7);
+            transition: all 0.3s ease;
+            font-family: 'Vazir', serif;
+        }
+
+        .modal-submit-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 0 #2c1810, 0 15px 30px rgba(0,0,0,0.8), 0 0 25px rgba(60,47,47,0.4);
+        }
+
+        .modal-submit-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #2c1810, 0 5px 10px rgba(0,0,0,0.6);
+        }
+
+        .initial-image-wrapper {
+            margin-bottom: 30px;
+            border: 2px solid #3c2f2f;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.9);
+            max-width: 100%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .initial-image {
+            width: 100%;
+            height: auto;
+            filter: sepia(0.5) contrast(1.2) brightness(0.95);
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            .question-box { padding: 35px 25px; }
+            .submit-btn { width: 96%; padding: 18px; font-size: 1.2rem; letter-spacing: 1.5px; }
+            h1 { letter-spacing: 6px; margin-bottom: 35px; font-size: clamp(2rem, 7vw, 3.5rem); }
+            .hole-section { margin-bottom: 30px; }
+            .hole-label { font-size: 1.5rem; margin: 20px 0 15px 0; }
+            .key-select { padding: 18px 30px 18px 18px; font-size: 1.2rem; background-position: left 12px center; }
+            .error-message { padding: 15px 25px; font-size: 1rem; width: 92%; left: 4%; transform: none; }
+            .modal-content { padding: 35px 25px; }
+            .modal-text { margin-bottom: 20px; font-size: 1.2rem; line-height: 1.8; }
+        }
+
+        @media (max-width: 768px) {
+            .container { max-width: 98%; }
+            .question-box { padding: 40px 30px; }
+            .modal-content { padding: 40px 30px; width: 98%; }
+        }
+    </style>
 </head>
 <body>
+    <div class="crt-overlay"></div>
+    <div class="noise"></div>
 
-  <h1>راهنمایی‌ها</h1>
+    <div class="container">
+        <h1>پازل کلیدها</h1>
 
-  <!-- راهنمایی ۱ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۱ - جدول سودوکوی حروف</span>
-      <span class="arrow">▶</span>
-    </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>قوانین سودوکو به شرح زیر است:<br>
-      در ستون‌ها، سطرها و مستطیل‌ها حروف تکراری قرار نگیرد.<br>
-      بعد از اتمام جدول، حروف را از چپ به راست بخوان.</p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">کاترین</p>
-    </div>
-  </div>
+        <div class="question-box">
+            <div class="initial-image-wrapper">
+                <img src="c.jpg" alt="تصویر حفره‌ها" class="initial-image">
+            </div>
 
-  <!-- راهنمایی ۲ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۲ - گاوصندوق استیو</span>
-      <span class="arrow">▶</span>
-    </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>ضلع های هر شکل را از صفحه ی اول تا صفحه پنج بشمار</p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">46530</p>
-    </div>
-  </div>
+            <p class="question-text">
+                هر کلید باید در کجا قرار گیرد؟
+            </p>
 
-  <!-- راهنمایی ۳ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۳ - گوشی الکساندرا</span>
-      <span class="arrow">▶</span>
-    </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>به بازجویی‌ها توجه کن. دارن یک تاریخ خاصی رو نشونت می‌دن.<br>
-      شاید لازم باشه کمی محاسبه انجام بدی.</p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">1965 تاریخ تولد استیو</p>
-    </div>
-  </div>
+            <div class="hole-section">
+                <div class="hole-label">حفره A</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectA">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
 
-  <!-- راهنمایی ۴ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۴ - کیف استیو</span>
-      <span class="arrow">▶</span>
-    </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>به میز کار استیو نگاهی بنداز
-چند تا خودکار رنگی میبینی؟
-      </p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">3625</p>
-    </div>
-  </div>
+            <div class="hole-section">
+                <div class="hole-label">حفره B</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectB">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
 
-  <!-- راهنمایی ۵ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۵ - نقاشی الکساندرا</span>
-      <span class="arrow">▶</span>
-    </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>
-دریانوردان قدیم این زبان را بهتر از هر ملوانی می‌شناختند.»
-گاهی یک خط کوتاه کنار یک نقطه، به تنهایی یک حرف کامل است.»</p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">سایه</p>
-    </div>
-  </div>
+            <div class="hole-section">
+                <div class="hole-label">حفره C</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectC">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
 
-  <!-- راهنمایی ۶ -->
-  <div class="hint-box">
-    <div class="hint-title" onclick="toggleHint(this)">
-      <span>راهنمایی ۶ - لپ تاپ جاناتان</span>
-      <span class="arrow">▶</span>
+            <div class="hole-section">
+                <div class="hole-label">حفره D</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectD">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="hole-section">
+                <div class="hole-label">حفره E</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectE">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="hole-section">
+                <div class="hole-label">حفره F</div>
+                <div class="key-selector-container">
+                    <select class="key-select" id="keySelectF">
+                        <option value="1">کلید ۱</option>
+                        <option value="2">کلید ۲</option>
+                        <option value="3">کلید ۳</option>
+                        <option value="4">کلید ۴</option>
+                        <option value="5">کلید ۵</option>
+                        <option value="6">کلید ۶</option>
+                        <option value="7">کلید ۷</option>
+                        <option value="8">کلید ۸</option>
+                        <option value="9">کلید ۹</option>
+                        <option value="10">کلید ۱۰</option>
+                        <option value="11">کلید ۱۱</option>
+                        <option value="12">کلید ۱۲</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submitAllKeys">ارسال</button>
+        </div>
     </div>
-    <button class="close-btn" onclick="closeHint(this)">✖</button>
-    <div class="hint-content">
-      <p>جاناتان عاشق چه کسی است؟
-خط های حروف اسمش را بشمار
-      </p>
-      <button class="show-btn" onclick="toggleAnswer(this)">نمایش جواب نهایی</button>
-      <p class="answer">755533</p>
+
+    <div class="error-message">
+        <span><i class="fas fa-exclamation-triangle"></i> پاسخ نادرست! دوباره تلاش کن.</span>
     </div>
-  </div>
-  
-  <script>
-    function toggleHint(titleElement) {
-      const box = titleElement.parentElement;
-      const content = box.querySelector(".hint-content");
-      box.classList.toggle("open");
-      content.classList.toggle("show");
-    }
 
-    function closeHint(closeBtn) {
-      const box = closeBtn.parentElement;
-      const content = box.querySelector(".hint-content");
-      box.classList.remove("open");
-      content.classList.remove("show");
-    }
+    <!-- مودال موفقیت -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <p class="modal-text">
+                تمام کلیدها به نرمی و همزمان می‌چرخند. همین است. شما صداهای کلیک و غژغژ یک سیستم مکانیکی درون دیوار را می‌شنوید که با چرخش خود، راهروی کوتاهی را آشکار می‌کند. شما، کمیسر فارادسون و نیروهای پلیس به سرعت به درون اتاقی پر از بشر، لوله، مواد شیمیایی و تجهیزات می‌شتابید.
+                اما گویا ریجر اینجا نیست.
+                روی میز مرکزی، یک نامه کوچک می‌بینید. وقتی آن را برمی‌دارید، ابر غباری ریزی در هوا بلند می‌شود. شما شروع به خواندن می‌کنید.<br><br>
+                پایان بخش اول
+                می‌توانید بخش دوم را هنگامی که آماده هستید، باز کنید.
+            </p>
+            <button class="modal-submit-btn" id="closeSuccess">بستن</button>
+        </div>
+    </div>
 
-    function toggleAnswer(button) {
-      const answer = button.nextElementSibling;
-      if (answer.style.display === "block") {
-        answer.style.display = "none";
-        button.textContent = "نمایش جواب نهایی";
-      } else {
-        answer.style.display = "block";
-        button.textContent = "مخفی کردن جواب";
-      }
-    }
-  </script>
+    <script>
+        const keySelectA = document.getElementById('keySelectA');
+        const keySelectB = document.getElementById('keySelectB');
+        const keySelectC = document.getElementById('keySelectC');
+        const keySelectD = document.getElementById('keySelectD');
+        const keySelectE = document.getElementById('keySelectE');
+        const keySelectF = document.getElementById('keySelectF');
+        const submitAllKeys = document.getElementById('submitAllKeys');
+        const errorMsg = document.querySelector('.error-message');
+        const successModal = document.getElementById('successModal');
+        const closeSuccess = document.getElementById('closeSuccess');
 
+        const CORRECT_KEYS = {
+            A: "5",
+            B: "8",
+            C: "10",
+            D: "2",
+            E: "9",
+            F: "3"
+        };
+
+        function showError() {
+            errorMsg.classList.add('show');
+            setTimeout(() => errorMsg.classList.remove('show'), 3000);
+        }
+
+        // ارسال همه کلیدها
+        submitAllKeys.addEventListener('click', () => {
+            const selectedA = keySelectA.value;
+            const selectedB = keySelectB.value;
+            const selectedC = keySelectC.value;
+            const selectedD = keySelectD.value;
+            const selectedE = keySelectE.value;
+            const selectedF = keySelectF.value;
+
+            if (selectedA === CORRECT_KEYS.A &&
+                selectedB === CORRECT_KEYS.B &&
+                selectedC === CORRECT_KEYS.C &&
+                selectedD === CORRECT_KEYS.D &&
+                selectedE === CORRECT_KEYS.E &&
+                selectedF === CORRECT_KEYS.F) {
+                successModal.classList.add('active');
+                // ریست select ها
+                keySelectA.value = "1";
+                keySelectB.value = "1";
+                keySelectC.value = "1";
+                keySelectD.value = "1";
+                keySelectE.value = "1";
+                keySelectF.value = "1";
+            } else {
+                showError();
+            }
+        });
+
+        closeSuccess.addEventListener('click', () => {
+            successModal.classList.remove('active');
+        });
+
+        successModal.addEventListener('click', e => {
+            if (e.target === successModal) successModal.classList.remove('active');
+        });
+    </script>
 </body>
 </html>
