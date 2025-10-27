@@ -415,6 +415,25 @@
             height: auto;
             filter: sepia(0.5) contrast(1.2) brightness(0.95);
         }
+        .one{
+            text-decoration: ce;
+        }
+
+        /* استایل جدید برای پایان بخش اول */
+        .end-section {
+            text-align: center;
+            margin-top: 25px; /* فاصله از بالا */
+            margin-bottom: 10px;
+            font-size: 40px;
+            font-weight: 300;
+        }
+
+        .end-section strong {
+            font-weight: bold; /* bold کردن */
+            font-size: 1.2em; /* کمی بزرگ‌تر برای تأکید */
+            color: #d2c6b8; /* رنگ کمی روشن‌تر برای زیبایی */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
 
         @media (max-width: 480px) {
             body { padding: 15px; }
@@ -427,6 +446,8 @@
             .error-message { padding: 15px 25px; font-size: 1rem; width: 92%; left: 4%; transform: none; }
             .modal-content { padding: 35px 25px; }
             .modal-text { margin-bottom: 20px; font-size: 1.2rem; line-height: 1.8; }
+            .end-section { margin-top: 20px; }
+            .end-section strong { font-size: 1.1em; }
         }
 
         @media (max-width: 768px) {
@@ -584,10 +605,10 @@
     <div class="modal-overlay" id="successModal">
         <div class="modal-content">
            <p class="modal-text">
-    تمام کلیدها به نرمی و همزمان می‌چرخند.همین است.شما صداهای کلیک وغژغژ یک سیستم مکانیکی درون دیوار را می‌شنوید که با چرخش خود،راهروی کوتاهی را آشکار می‌کند. شما، کمیسر فارادسون و نیروهای پلیس به سرعت به درون اتاقی پر از بشر، لوله، مواد شیمیایی و تجهیزات می‌شتابید.
+    تمام کلیدها به نرمی و همزمان می‌چرخند. همین است. شما صداهای کلیک و غژغژ یک سیستم مکانیکی درون دیوار را می‌شنوید که با چرخش خود، راهروی کوتاهی را آشکار می‌کند. شما، کمیسر فارادسون و نیروهای پلیس به سرعت به درون اتاقی پر از بشر، لوله، مواد شیمیایی و تجهیزات می‌شتابید.
     اما گویا ریجر اینجا نیست.
     روی میز مرکزی، یک نامه کوچک می‌بینید. وقتی آن را برمی‌دارید، ابر غباری ریزی در هوا بلند می‌شود. شما شروع به خواندن می‌کنید.<br>
-    <strong>پایان بخش اول</strong><br>
+    <div class="end-section"><strong>پایان بخش اول</strong></div>
     می‌توانید بخش دوم را هنگامی که آماده هستید، باز کنید.
 </p>
 
